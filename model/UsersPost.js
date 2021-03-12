@@ -5,7 +5,7 @@ const UsersPost = function () {
     // create users schema
     this.schema = new mongoose.Schema({
         img: String,
-        email: {type: String, unique: true},
+        email: String,
         like: {type: Number, default: 0},
         date: {type: Date, default: Date.now},
     });
