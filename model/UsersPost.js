@@ -46,23 +46,25 @@ UsersPost.prototype.getAllPost = function (email, callback) {
     })
 };
 
-UsersPost.prototype.likePost = function (email, postid, callback) {
+UsersPost.prototype.likePost = function (postid, callback) {
     const self = this;
-    self.postDB.find({email: email}, function (err, docs) {
-        if (docs.length) {
-            callback({
-                state: true,
-                data: docs
-            })
-        } else {
-            callback({
-                state: false,
-                data: []
-            })
-        }
-    })
-};
 
+    self.postDB.findOneAndUpdate({_id: postid}, {$inc: {like: 1}}, {new: true},
+        function (err, response) {
+            if (err) {
+                callback({
+                    state: false,
+                    data: []
+                })
+            } else {
+                callback({
+                    state: true,
+                    data: response
+                })
+            }
+        });
+
+};
 module.exports = UsersPost;
 
 
