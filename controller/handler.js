@@ -1,5 +1,6 @@
 const db = require('../model/db')
 const Users = require('../model/Users')
+const UsersPost = require('../model/UsersPost')
 
 exports.HgetUserByEmail_Fname = (req, res) => {
     db.getUserByEmail_Fname(req.body.email, function (resp) {
@@ -60,6 +61,38 @@ exports.HcreateImage = (req, res) => {
 exports.HaddUser = (req, res) => {
     user = new Users();
     user.addUser(req.body.family_name, req.body.name, req.body.email, req.body.password, function (resp) {
+        res.send(resp)
+    })
+
+}
+
+exports.HloginUser = (req, res) => {
+    user = new Users();
+    user.login(req.body.email, req.body.password, function (resp) {
+        res.send(resp)
+    })
+
+}
+
+exports.HaddPost = (req, res) => {
+    userPost = new UsersPost();
+    userPost.addPost(req.body.img, req.body.email, function (resp) {
+        res.send(resp)
+    })
+
+}
+
+exports.HgetAllPost = (req, res) => {
+    userPost = new UsersPost();
+    userPost.getAllPost(req.body.email, function (resp) {
+        res.send(resp)
+    })
+
+}
+
+exports.HlikePost = (req, res) => {
+    userPost = new UsersPost();
+    userPost.likePost(req.body.postid, function (resp) {
         res.send(resp)
     })
 
