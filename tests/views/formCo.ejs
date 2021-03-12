@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Uploading</title>
+</head>
+ 
+<body>
+    <h1>Connexion</h1>
+    <hr>
+    <div>
+        <form action="/Connexion" method="POST" enctype="application/json">
+            <div>
+                <label for="email">email : </label>
+                <input type="text" id="email" placeholder="email"
+                value="" name="email" required>
+               
+            </div>
+            <div>
+                <label for="password">Password : </label>
+                <input type="password" id="password" placeholder="password"
+                value="FakePSW" name="password" required>
+            </div>
+            
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+ 
+    <hr>
+</body>
+ 
+</html>
