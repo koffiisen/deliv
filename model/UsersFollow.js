@@ -5,7 +5,7 @@ const UsersFollow = function () {
     // create users schema
     this.schema = new mongoose.Schema({
         email: String,
-        followers: []
+        followers: [String]
     });
     // bind schema with database
     this.followDB = mongoose.model('UsersFollow', this.schema);
@@ -55,8 +55,8 @@ UsersFollow.prototype.getAllFollower = function (emailUser, callback) {
             if (docs.length > 0) {
                 callback({
                     state: true,
-                    data: docs.followers,
-                    total: docs.followers.length
+                    data: docs[0].followers,
+                    total:docs[0].followers.length
                 })
             } else {
                 callback({
@@ -71,7 +71,7 @@ UsersFollow.prototype.getAllFollower = function (emailUser, callback) {
 UsersFollow.prototype.updateFollower = function (emailUser, emailFollower, callback) {
     const self = this;
 
-    self.postDB.findOneAndUpdate({email: emailUser}, {$addToSet: {followers: emailFollower}}, {new: true},
+    self.followDB.findOneAndUpdate({email: emailUser}, {$addToSet: {followers: emailFollower}}, {new: true},
         function (err, response) {
             if (err) {
                 callback({

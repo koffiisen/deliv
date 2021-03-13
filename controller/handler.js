@@ -42,7 +42,7 @@ exports.HlikePost = (req, res) => {
 }
 
 exports.HaddFollower = (req, res) => {
-    usersFollow.addFollower(req.body.emailUser, res.body.emailFollower, function (resp) {
+    usersFollow.addFollower(req.body.emailUser, req.body.emailFollower, function (resp) {
         res.send(resp)
     })
 }
