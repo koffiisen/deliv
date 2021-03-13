@@ -9,13 +9,14 @@ const Users = function () {
         email: {type: String, unique: true},
         password: String,
         grade: {type: Number, default: 0},
+        description: String,
         date: {type: Date, default: Date.now},
     });
     // bind schema with database
     this.userDB = mongoose.model('Users', this.schema);
 };
 
-Users.prototype.addUser = function (family_nameM, nameM, emailM, passwordM, callback) {
+Users.prototype.addUser = function (family_nameM, nameM, emailM, passwordM, descriptionM, callback) {
     const self = this;
     self.userDB.find({email: emailM}, function (err, docs) {
         if (docs.length) {
@@ -24,7 +25,13 @@ Users.prototype.addUser = function (family_nameM, nameM, emailM, passwordM, call
                 data: "Email already exists"
             })
         } else {
-            const user = new self.userDB({family_name: family_nameM, name: nameM, email: emailM, password: passwordM});
+            const user = new self.userDB({
+                family_name: family_nameM,
+                name: nameM,
+                email: emailM,
+                password: passwordM,
+                description: descriptionM
+            });
             user.save().then(function () {
                 callback({
                     state: true,
@@ -50,6 +57,31 @@ Users.prototype.login = function (emailM, passwordM, callback) {
             })
         }
     })
+};
+
+Users.prototype.delete = function (Fname, Uemail, callback) {
+    const self = this;
+
+    self.userDB.deleteOne({family_name: Fname, email: Uemail}, function (err, docs) {
+        if (err) {
+            callback({
+                state: false,
+                data: []
+            })
+        } else {
+            if (docs.length > 0) {
+                callback({
+                    state: true,
+                    data: docs
+                })
+            } else {
+                callback({
+                    state: false,
+                    data: []
+                })
+            }
+        }
+    });
 };
 
 module.exports = Users;
