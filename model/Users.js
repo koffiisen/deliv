@@ -19,25 +19,32 @@ const Users = function () {
 Users.prototype.addUser = function (family_nameM, nameM, emailM, passwordM, descriptionM, callback) {
     const self = this;
     self.userDB.find({email: emailM}, function (err, docs) {
-        if (docs.length) {
+        if (err) {
             callback({
                 state: false,
-                data: "Email already exists"
+                data: err
             })
         } else {
-            const user = new self.userDB({
-                family_name: family_nameM,
-                name: nameM,
-                email: emailM,
-                password: passwordM,
-                description: descriptionM
-            });
-            user.save().then(function () {
+            if (docs.length > 0) {
                 callback({
-                    state: true,
-                    data: docs
+                    state: false,
+                    data: "Email already exists"
                 })
-            });
+            } else {
+                const user = new self.userDB({
+                    family_name: family_nameM,
+                    name: nameM,
+                    email: emailM,
+                    password: passwordM,
+                    description: descriptionM
+                });
+                user.save().then(function () {
+                    callback({
+                        state: true,
+                        data: docs
+                    })
+                });
+            }
         }
     })
 };
@@ -45,16 +52,23 @@ Users.prototype.addUser = function (family_nameM, nameM, emailM, passwordM, desc
 Users.prototype.login = function (emailM, passwordM, callback) {
     const self = this;
     self.userDB.find({email: emailM, password: passwordM}, function (err, docs) {
-        if (docs.length) {
-            callback({
-                state: true,
-                data: []
-            })
-        } else {
+        if (err) {
             callback({
                 state: false,
-                data: []
+                data: err
             })
+        } else {
+            if (docs.length > 0) {
+                callback({
+                    state: true,
+                    data: []
+                })
+            } else {
+                callback({
+                    state: false,
+                    data: []
+                })
+            }
         }
     })
 };

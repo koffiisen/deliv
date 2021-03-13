@@ -32,16 +32,23 @@ UsersPost.prototype.addPost = function (img, email, callback) {
 UsersPost.prototype.getAllPost = function (email, callback) {
     const self = this;
     self.postDB.find({email: email}, function (err, docs) {
-        if (docs.length) {
-            callback({
-                state: true,
-                data: docs
-            })
-        } else {
+        if (err) {
             callback({
                 state: false,
-                data: []
+                data: err
             })
+        } else {
+            if (docs.length > 0) {
+                callback({
+                    state: true,
+                    data: docs
+                })
+            } else {
+                callback({
+                    state: false,
+                    data: []
+                })
+            }
         }
     })
 };

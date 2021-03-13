@@ -14,24 +14,31 @@ const UsersFollow = function () {
 UsersFollow.prototype.addFollower = function (emailUser, emailFollower, callback) {
     const self = this;
     self.followDB.find({email: emailUser}, function (err, docs) {
-        if (docs.length) {
-            self.updateFollower(emailUser, emailFollower, callback)
+        if (err) {
+            callback({
+                state: false,
+                data: err
+            })
         } else {
-            const follower = new self.followDB({
-                email: emailUser,
-                followers: [emailFollower]
-            });
-            follower.save().then(function () {
-                callback({
-                    state: true,
-                    data: docs
-                })
-            }).catch(function () {
-                callback({
-                    state: false,
-                    data: "error to save"
-                })
-            });
+            if (docs.length > 0) {
+                self.updateFollower(emailUser, emailFollower, callback)
+            } else {
+                const follower = new self.followDB({
+                    email: emailUser,
+                    followers: [emailFollower]
+                });
+                follower.save().then(function () {
+                    callback({
+                        state: true,
+                        data: docs
+                    })
+                }).catch(function () {
+                    callback({
+                        state: false,
+                        data: "error to save"
+                    })
+                });
+            }
         }
     })
 };
@@ -39,17 +46,24 @@ UsersFollow.prototype.addFollower = function (emailUser, emailFollower, callback
 UsersFollow.prototype.getAllFollower = function (emailUser, callback) {
     const self = this;
     self.followDB.find({email: emailUser}, function (err, docs) {
-        if (docs.length) {
-            callback({
-                state: true,
-                data: docs.followers,
-                total: docs.followers.length
-            })
-        } else {
+        if (err) {
             callback({
                 state: false,
-                data: []
+                data: err
             })
+        } else {
+            if (docs.length > 0) {
+                callback({
+                    state: true,
+                    data: docs.followers,
+                    total: docs.followers.length
+                })
+            } else {
+                callback({
+                    state: false,
+                    data: []
+                })
+            }
         }
     })
 };
